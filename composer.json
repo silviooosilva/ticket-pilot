@@ -1,0 +1,25 @@
+{
+    "name": "fabledsolutions/github-sdk",
+    "description": "An library for github api communications",
+    "type": "library",
+    "require": {
+        "guzzlehttp/guzzle": "^7.9"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^12.1"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Fabledsolutions\\GithubSdk\\": "src/"
+        },
+        "files": [
+            "src/Boot/Config.php"
+        ]
+    },
+    "authors": [
+        {
+            "name": "Fabled Solutions"
+        }
+    ]
+}
