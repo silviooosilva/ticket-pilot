@@ -24,7 +24,7 @@ class Client
 
     /**
      * @return \GuzzleHttp\Client
-     * @throws \Exception Se houver erro na configuração ou inicialização.
+     * @throws \Exception.
      */
     public static function setup(): \GuzzleHttp\Client
     {
