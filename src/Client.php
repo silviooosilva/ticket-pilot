@@ -50,4 +50,13 @@ class Client
             throw new \Exception("General Exception: " . $e->getMessage(), 0, $e);
         }
     }
+
+    public static function listPublicRepositoriesByUser(string $username): array
+    {
+        $client = self::setup();
+        $response = $client->get("users/{$username}/repos");
+        return json_decode($response->getBody()->getContents(), true);
+    }
+    
+
 }

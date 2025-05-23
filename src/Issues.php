@@ -30,12 +30,17 @@ class Issues
      * Get the list of issues for a repository.
      * @param string $owner The owner of the repository.
      * @param string $repo The name of the repository.
+     * @param array $params Optional query params (e.g., ['milestone' => 1])
      * @return array The list of issues.
      */
-    public static function listIssues(string $owner, string $repo): array
+    public static function listIssues(string $owner, string $repo, array $params = []): array
     {
         $client = self::getClient();
-        $response = $client->get("repos/{$owner}/{$repo}/issues");
+        $query = '';
+        if (!empty($params)) {
+            $query = '?' . http_build_query($params);
+        }
+        $response = $client->get("repos/{$owner}/{$repo}/issues{$query}");
         return json_decode($response->getBody()->getContents(), true);
     }
 
@@ -56,6 +61,7 @@ class Issues
                 'body' => $data['body'] ?? '',
                 'assignees' => $data['assignees'] ?? [],
                 'labels' => $data['labels'] ?? [],
+                'milestone' => $data['milestone'] ?? null,
             ],
         ]);
         return json_decode($response->getBody()->getContents(), true);

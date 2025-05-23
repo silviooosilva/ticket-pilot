@@ -9,9 +9,10 @@ require_once __DIR__ . '/src/Milestones.php';
 require_once __DIR__ . '/src/Assignees.php';
 require_once __DIR__ . '/vendor/autoload.php';
 
+use Fabledsolutions\GithubSdk\Client;
 use Fabledsolutions\GithubSdk\Issues;
-use Fabledsolutions\GithubSdk\Milestones;
 use Fabledsolutions\GithubSdk\Assignees;
+use Fabledsolutions\GithubSdk\Milestones;
 
 header('Content-Type: application/json');
 
@@ -26,7 +27,11 @@ $repo = $input['repo'] ?? '';
 try {
     switch ($action) {
         case 'listIssues':
-            echo json_encode(Issues::listIssues($owner, $repo));
+            if (isset($input['milestone']) && $input['milestone'] !== '') {
+                echo json_encode(Issues::listIssues($owner, $repo, ['milestone' => $input['milestone']]));
+            } else {
+                echo json_encode(Issues::listIssues($owner, $repo));
+            }
             break;
         case 'getIssue':
             echo json_encode(Issues::getIssue($owner, $repo, (int)$input['issueNumber']));
@@ -47,11 +52,23 @@ try {
         case 'createMilestone':
             echo json_encode(Milestones::createMilestone($owner, $repo, $input['data']));
             break;
+        case 'updateMilestone':
+            echo json_encode(Milestones::updateMilestone($owner, $repo, (int)$input['milestoneNumber'], $input['data']));
+            break;
+        case 'getMilestone':
+            echo json_encode(Milestones::getMilestone($owner, $repo, (int)$input['milestoneNumber']));
+            break;
         case 'getAssignees':
             echo json_encode(Assignees::getAssignees($owner, $repo));
             break;
+        case 'deleteMilestone':
+            echo json_encode(Milestones::deleteMilestone($owner, $repo, (int)$input['milestoneNumber']));
+            break;
+        case 'listPublicRepositories':
+            echo json_encode(Client::listPublicRepositoriesByUser($owner));
+            break;
         default:
-            echo json_encode(['error' => 'Ação inválida']);
+            echo json_encode(['error' => 'Invalid action specified.']);
     }
 } catch (Exception $e) {
     echo json_encode(['error' => $e->getMessage()]);
